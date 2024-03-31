@@ -1,0 +1,65 @@
+use std::io;
+
+#[derive(Debug)] // Permite imprimir o processo de forma mais fácil
+struct Processo {
+    PID: usize,
+    tam_memoria: usize,
+    tempo_execucao: usize,
+}
+
+fn main() {
+    let mut pilha_processos: Vec<Processo> = Vec::new(); // Utilizamos um Vec ao invés de Stack
+
+    println!("Informe a capacidade da pilha de processos:");
+    let mut capacidade = String::new();
+    io::stdin().read_line(&mut capacidade)
+        .expect("Falha ao ler a entrada");
+    let capacidade: usize = capacidade.trim().parse()
+        .expect("Por favor, digite um número válido");
+
+    println!("Configurações iniciais dos processos:");
+
+    for i in 0..capacidade {
+        println!("Processo #{}", i + 1);
+        println!("Tamanho de memória:");
+        let mut tam_memoria = String::new();
+        io::stdin().read_line(&mut tam_memoria)
+            .expect("Falha ao ler a entrada");
+        let tam_memoria: usize = tam_memoria.trim().parse()
+            .expect("Por favor, digite um número válido");
+
+        println!("Tempo de execução (entre 30 e 90 segundos):");
+        let mut tempo_execucao = String::new();
+        io::stdin().read_line(&mut tempo_execucao)
+            .expect("Falha ao ler a entrada");
+        let tempo_execucao: usize = tempo_execucao.trim().parse()
+            .expect("Por favor, digite um número válido");
+
+        let processo = Processo { PID: i, tam_memoria, tempo_execucao };
+        pilha_processos.push(processo);
+    }
+
+    println!("\nResumo dos processos:");
+    for processo in &pilha_processos {
+        println!("PID: {}", processo.PID);
+    }
+
+    println!("\nExecução dos processos:");
+    let mut total_tempo = 0;
+    let mut total_mem_size = 0;
+    while let Some(processo) = pilha_processos.pop() {
+        println!("\nInício da execução do processo de PID {}", processo.PID);
+        println!("Processo em execução...");
+        for _ in 0..processo.tempo_execucao {
+            std::thread::sleep(std::time::Duration::from_secs(1));
+            print!("|");
+        }
+        println!("\nProcesso de PID {} executado com sucesso.", processo.PID);
+        total_tempo += processo.tempo_execucao;
+        total_mem_size += processo.tam_memoria;
+    }
+
+    println!("\nResumo da execução:");
+    println!("Consumo total de memória: {}", total_mem_size);
+    println!("Tempo total gasto na execução: {} segundos", total_tempo);
+}
