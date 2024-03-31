@@ -1,0 +1,76 @@
+// PACOTES
+import java.util.Scanner;
+import java.util.Stack;
+
+// CLASSE PROCESSO.
+class Processo {
+    int PID;
+    int tamMemoria;
+    int tempoExecucao;
+
+    // METODOS DO PROCESSO.
+    public Processo(int PID, int tamMemoria, int tempoExecucao) {
+        this.PID = PID;
+        this.tamMemoria = tamMemoria;
+        this.tempoExecucao = tempoExecucao;
+    }
+}
+// MAIN
+public class Main {
+    public static void main(String[] args) {
+        // SCANNER PARA LEITURA.
+        Scanner ler = new Scanner(System.in);
+        // PILHA.
+        Stack<Processo> pilhaProcessos = new Stack<>();
+        // VARIAVEIS.
+        int capacidade;
+        int totalTempo = 0;
+        int totalMemSize = 0;
+
+        // INFORMAÇÃO AO USUARIO.
+        System.out.println("Informe a capacidade da pilha de processos:");
+        capacidade = ler.nextInt();
+
+        System.out.println("Configurações iniciais dos processos:");
+         // LOOP.
+        for (int i = 0; i < capacidade; i++) {
+            System.out.println("Processo #" + (i + 1));
+            System.out.print("Tamanho de memória: ");
+            int tamMemoria = ler.nextInt();
+            System.out.print("Tempo de execução (entre 30 e 90 segundos): ");
+            int tempoExecucao = ler.nextInt();
+            pilhaProcessos.push(new Processo(i, tamMemoria, tempoExecucao));
+        }
+         // RESUMO DO PROCESSO PARA OS USUARIOS
+        System.out.println("\nResumo dos processos:");
+        for (Processo processo : pilhaProcessos) {
+            System.out.println("PID: " + processo.PID);
+        }
+        // EXECUTANDO O PROCESSO.
+        System.out.println("\nExecução dos processos:");
+        while (!pilhaProcessos.isEmpty()) {
+            Processo processo = pilhaProcessos.pop();
+            System.out.println("\nInício da execução do processo de PID " + processo.PID);
+            System.out.println("Processo em execução...");
+            for (int i = 0; i < processo.tempoExecucao; i++) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // BARRINHA DE CARREGAMENTO.
+                System.out.print("|");
+            }
+            // INFORMAÇÕES NO CONSOLE.
+            System.out.println("\nProcesso de PID " + processo.PID + " executado com sucesso.");
+            totalTempo += processo.tempoExecucao;
+            totalMemSize += processo.tamMemoria;
+        }
+
+        System.out.println("\nResumo da execução:");
+        System.out.println("Consumo total de memória: " + totalMemSize);
+        System.out.println("Tempo total gasto na execução: " + totalTempo + " segundos");
+
+        ler.close();
+    }
+}// FIM DO CONDIGO.
